@@ -39,16 +39,26 @@ class User extends Authenticatable
   protected $hidden = [
     'password',
     'remember_token',
-    'verification_token',
+    //'verification_token',
   ];
 
-  /**
-   * The attributes that should be cast to native types.
-   * @var array
-   */
-  protected $casts = [
-    'email_verified_at' => 'datetime',
-  ];
+  // Mutator for the 'name' attribute:
+  public function setNameAttribute($name)
+  {
+    $this->attributes['name'] = strtolower($name);
+  }
+
+  // Accessor for the 'name' attribute:
+  public function getNameAttribute($name)
+  {
+    return ucwords($name);
+  }
+
+  // Mutator for the 'email' attribute:
+  public function setEmailAttribute($email)
+  {
+    $this->attributes['email'] = strtolower($email);
+  }
 
   public function isVerified()
   {
@@ -64,5 +74,13 @@ class User extends Authenticatable
   {
     return Str::random(40);
   }
+
+  /**
+   * The attributes that should be cast to native types.
+   * @var array
+   */
+  protected $casts = [
+    'email_verified_at' => 'datetime',
+  ];
 
 }
