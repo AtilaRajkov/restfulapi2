@@ -22,13 +22,13 @@ class CreateTransactionsTable extends Migration
 
             $table->foreign('buyer_id')
               ->references('id')
-              ->on('users')
-              ->onDelete('cascade');
+              ->on('users');
+//              ->onDelete('cascade');
 
             $table->foreign('product_id')
               ->references('id')
-              ->on('products')
-              ->onDelete('cascade');
+              ->on('products');
+//              ->onDelete('cascade');
         });
     }
 

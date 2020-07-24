@@ -6,6 +6,7 @@ use App\Traits\ApiResponser;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -99,7 +100,27 @@ class Handler extends ExceptionHandler
         );
     }
 
-    return parent::render($request, $exception);
+    if ($exception instanceof QueryException) {
+      $errorCode = $exception->errorInfo[1];
+
+      if ($errorCode == 1451) {
+        return $this->errorResponse(
+          'Cannot remove this resource permanently. It is related wit other resource.',
+          409
+        );
+      }
+
+    }
+
+    if (config('app.debug')) {
+      /// Returns the detailed message if the debug mod is on.
+      return parent::render($request, $exception);
+    }
+
+    return $this->errorResponse(
+      'Unexpected Exception. Please try later',
+      500
+      );
   }
 
   /// Atila. Overwriting the parent function for handling
