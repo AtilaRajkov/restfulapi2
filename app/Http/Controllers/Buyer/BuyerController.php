@@ -15,7 +15,8 @@ class BuyerController extends ApiController
    */
   public function index()
   {
-    $buyers = Buyer::has('transactions')->get();
+    //$buyers = Buyer::has('transactions')->get();
+    $buyers = Buyer::all();
     //return response()->json(['data' => $buyers], 200);
     return $this->showAll($buyers, 200);
   }
@@ -27,9 +28,9 @@ class BuyerController extends ApiController
    * @param int $id
    * @return \Illuminate\Http\Response
    */
-  public function show($id)
+  public function show(Buyer $buyer)
   {
-    $buyer = Buyer::has('transactions')->findorFail($id);
+    //$buyer = Buyer::has('transactions')->findorFail($id);
     //return response()->json(['data' => $buyer], 200);
     return $this->showOne($buyer, 200);
   }
