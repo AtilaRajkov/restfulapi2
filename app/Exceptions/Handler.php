@@ -3,8 +3,14 @@
 namespace App\Exceptions;
 
 use App\Traits\ApiResponser;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -58,7 +64,49 @@ class Handler extends ExceptionHandler
       return $this->convertValidationExceptionToResponse($exception, $request);
     }
 
+    if ($exception instanceof ModelNotFoundException) {
+      $modelName = strtolower(class_basename($exception->getModel()));
+
+      return $this->errorResponse(
+      "Does not exist any '{$modelName}' with the specified identifier",
+      404);
+    }
+
+    if ($exception instanceof AuthenticationException) {
+      return $this->unauthenticated($request, $exception);
+    }
+
+    if ($exception instanceof AuthorizationException) {
+      return $this->errorResponse($exception->getMessage(), 403);
+    }
+
+    if ($exception instanceof NotFoundHttpException) {
+      return $this->errorResponse(
+        'The specified URL cannot be found.',
+        404);
+    }
+
+    if ($exception instanceof MethodNotAllowedHttpException) {
+      return $this->errorResponse(
+        'The specified method for the request is invalid.',
+        405);
+    }
+
+    if ($exception instanceof HttpException) {
+      return $this->errorResponse(
+        $exception->getMessage(),
+        $exception->getStatusCode()
+        );
+    }
+
     return parent::render($request, $exception);
+  }
+
+  /// Atila. Overwriting the parent function for handling
+  /// Authentication Exceptions:
+  protected function unauthenticated($request, AuthenticationException $exception)
+  {
+    return $this->errorResponse('Unauthenticated.', 401);
   }
 
   /**
@@ -83,4 +131,6 @@ class Handler extends ExceptionHandler
     // return response()->json($errors, 422);
     return $this->errorResponse($errors, 422);
   }
+
+
 }
