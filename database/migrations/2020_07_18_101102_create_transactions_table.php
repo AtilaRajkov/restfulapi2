@@ -6,39 +6,40 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateTransactionsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('transactions', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-            $table->integer('quantity')->unsigned();
-            $table->unsignedBigInteger('buyer_id');
-            $table->unsignedBigInteger('product_id');
+  /**
+   * Run the migrations.
+   *
+   * @return void
+   */
+  public function up()
+  {
+    Schema::create('transactions', function (Blueprint $table) {
+      $table->id();
+      $table->timestamps();
+      $table->integer('quantity')->unsigned();
+      $table->unsignedBigInteger('buyer_id');
+      $table->unsignedBigInteger('product_id');
+      $table->softDeletes();//deleted_at
 
-            $table->foreign('buyer_id')
-              ->references('id')
-              ->on('users');
+      $table->foreign('buyer_id')
+        ->references('id')
+        ->on('users');
 //              ->onDelete('cascade');
 
-            $table->foreign('product_id')
-              ->references('id')
-              ->on('products');
+      $table->foreign('product_id')
+        ->references('id')
+        ->on('products');
 //              ->onDelete('cascade');
-        });
-    }
+    });
+  }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('transactions');
-    }
+  /**
+   * Reverse the migrations.
+   *
+   * @return void
+   */
+  public function down()
+  {
+    Schema::dropIfExists('transactions');
+  }
 }
