@@ -22,6 +22,13 @@ class UserController extends ApiController
     return $this->showAll($users, 200);
   }
 
+  public function index1()
+  {
+    foreach(request()->query() as $query => $value) {
+      return response()->json(['data' => $query], 200);
+    }
+  }
+
 
   /**
    * Store a newly created resource in storage.
