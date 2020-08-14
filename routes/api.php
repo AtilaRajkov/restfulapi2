@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 /*
  * Buyers
  */
-Route::resource(' /buyers', 'Buyer\BuyerController')
+Route::resource('/buyers', 'Buyer\BuyerController')
   ->only(['index', 'show']);
 Route::resource('buyers.transactions', 'Buyer\BuyerTransactionController')
   ->only('index');
