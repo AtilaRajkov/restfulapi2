@@ -35,10 +35,10 @@ class TransformInput
       $transformedErrors = [];
 
       foreach ($data->error as $field => $error) {
+
         $transformedField = $transformer::transformedAttribute($field);
 
-        $transformedErrors[$transformedField] =
-          str_replace($field, $transformedField, $error);
+        $transformedErrors[$transformedField] = str_replace($field, $transformedField, $error);
       }
 
       $data->error = $transformedErrors;

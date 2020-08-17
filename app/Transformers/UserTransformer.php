@@ -36,6 +36,10 @@ class UserTransformer extends TransformerAbstract
       'identifier' => (int)$user->id,
       'name' => (string)$user->name,
       'email' => (string)$user->email,
+      // Had to add these two lines so the validation transformations would work
+      'password' => (string)$user->password,
+      'password_confirmation' => (string)$user->password_confirmation,
+
       'isVerified' => (int)$user->verified,
       'isAdmin' => ($user->admin === 'true'),
       'createdDate' => (string)$user->created_at,
@@ -58,6 +62,10 @@ class UserTransformer extends TransformerAbstract
       'identifier' => 'id',
       'name' => 'name',
       'email' => 'email',
+      // Had to add these two lines so the validation transformations would work
+      'password' => 'password',
+      'password_confirmation' => 'password_confirmation',
+
       'isVerified' => 'verified',
       'isAdmin' => 'admin',
       'createdDate' => 'created_at',
@@ -72,14 +80,18 @@ class UserTransformer extends TransformerAbstract
   public static function transformedAttribute($index)
   {
     $attributes = [
-       'id' => 'identifier',
-       'name' => 'name',
-       'email' => 'email',
-       'verified' => 'isVerified',
-       'admin' => 'isAdmin',
-       'created_at' => 'createdDate',
-       'updated_at' => 'lastChanged',
-       'deleted_at' => 'deletedDate',
+      'id' => 'identifier',
+      'name' => 'name',
+      'email' => 'email',
+      // Had to add these two lines so the validation transformations would work
+      'password' => 'password',
+      'password_confirmation' => 'password_confirmation',
+
+      'verified' => 'isVerified',
+      'admin' => 'isAdmin',
+      'created_at' => 'createdDate',
+      'updated_at' => 'lastChanged',
+      'deleted_at' => 'deletedDate',
     ];
 
     return isset($attributes[$index]) ? $attributes[$index] : null;
