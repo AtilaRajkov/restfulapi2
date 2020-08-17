@@ -4,10 +4,19 @@ namespace App\Http\Controllers\Category;
 
 use App\Category;
 use App\Http\Controllers\ApiController;
+use App\Transformers\CategoryTransformer;
 use Illuminate\Http\Request;
 
 class CategoryController extends ApiController
 {
+  public function __construct()
+  {
+    parent::__construct();
+
+    $this->middleware('transform.input:'.CategoryTransformer::class)
+      ->only(['store', 'update']);
+  }
+
   /**
    * Display a listing of the resource.
    *
@@ -31,7 +40,7 @@ class CategoryController extends ApiController
   {
     $rules = [
       'name' => 'required|string|min:2|max:191|unique:categories',
-      'description' => 'sometimes|string|min:2|max:1000'
+      'description' => 'required|string|min:2|max:1000'
     ];
 
     $data = request()->validate($rules);
